@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <title>Bảng Đấu</title>
+    <style>
+        body{
+            background-image: url(https://wallpaperaccess.com/full/498776.jpg);
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        .body{
+            margin-top: 25vh;
+        }
+        .link{
+            text-decoration: none;
+        }
+        .link:hover{
+            color: white;
+        }
+        .aa{
+            float: right;
+        }
+        #imglogo{
+            width: 75%;
+            height: 75%;
+            margin-left: 3%;
+        }
+        nav{
+            background-color: white;
+            opacity: 0.5;
+        }
+        .nav-link{
+            color: black;
+        }
+    </style>
+    <script>
+    	$(document).ready(function(){
+            let link = document.getElementById("link").getAttribute("data");
+            $("#link").attr('href','/tuket/'+link);
+        });
+    </script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" th:href="@{/home}"><img id="imglogo" src="https://lh3.googleusercontent.com/a-/ACNPEu8X6lP2S43SkQUMJAIfYco8Bt83rt1LnztXxojAMMc=s75-c" alt=""></a>
+            <div class="d-lg-flex justify-content-end">  
+                <a class="nav-link" href="#">[[${#httpServletRequest.remoteUser}]]</a>
+                <a class="nav-link" th:href="@{/changepassword}">Đổi mật khẩu</a>
+                <a class="nav-link" href="javascript: logoutform.submit()">Đăng xuất</a>
+            </div>
+        </div>
+    </nav>
+    <form name="logoutform" th:action="@{/doLogout}" method "post" th:hidden="true">
+    	<input type="submit" value="Logout"/>
+    </form>
+    <div class="container body">
+        <div class="row">
+            <div class="col-3">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-header">
+                      <a th:href="@{'/trandau/' + ${bA}}" class="link">Bảng A</a>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item" th:each="item : ${BangA}">
+                      	<span th:text="${item.name}"></span>
+                        <span class="aa" th:text="${item.diem}"></span>
+                       </li>
+                    </ul>
+                  </div>
+            </div>
+            <div class="col-3">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-header">
+                      <a th:href="@{'/trandau/' + ${bB}}" class="link">Bảng B</a>
+                    </div>
+                    <ul class="list-group list-group-flush" th:each="item : ${BangB}">
+                      <li class="list-group-item">
+                      	<span th:text="${item.name}"></span>
+                        <span class="aa" th:text="${item.diem}"></span>
+                       </li>
+                    </ul>
+                  </div>
+            </div>
+            <div class="col-3">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-header">
+                      <a th:href="@{'/trandau/' + ${bC}}" class="link">Bảng C</a>
+                    </div>
+                    <ul class="list-group list-group-flush" th:each="item : ${BangC}">
+                      <li class="list-group-item">
+                      	<span th:text="${item.name}"></span>
+                        <span class="aa" th:text="${item.diem}"></span>
+                       </li>
+                    </ul>
+                  </div>
+            </div>
+            <div class="col-3">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-header">
+                      <a th:href="@{'/trandau/' + ${bD}}" class="link">Bảng D</a>
+                    </div>
+                    <ul class="list-group list-group-flush" th:each="item : ${BangD}">
+                      <li class="list-group-item">
+                      	<span th:text="${item.name}"></span>
+                        <span class="aa" th:text="${item.diem}"></span>
+                       </li>
+                    </ul>
+                  </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

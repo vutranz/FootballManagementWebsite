@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <title>Trận Đấu</title>
+    <style>
+        body{
+            background-image: url(https://wallpaperaccess.com/full/498776.jpg);
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        .body{
+            margin-top: 20vh;
+        }
+        .link{
+            text-decoration: none;
+            color: white;
+        }
+        .link:hover{
+            color: white;
+        }
+        .aa{
+            float: right;
+        }
+        #imglogo{
+            width: 75%;
+            height: 75%;
+            margin-left: 3%;
+        }
+        nav{
+            background-color: white;
+            opacity: 0.5;
+        }
+        .nav-link{
+            color: black;
+        }
+        td{
+            padding: 5px;
+        }
+    </style>
+    <script>
+        $(document).ready(function(){
+            if($('#role').val()==='notAdmin'){
+                $('.score').attr('readonly',true)
+                $('#save').attr('disabled',true)
+            }
+        });
+        
+        function printKQ(area) {
+            var printContents = document.getElementById(area).innerHTML;
+            var originalContents = document.body.innerHTML;
+            document.body.innerHTML = printContents;
+            window.print();
+            document.body.innerHTML = originalContents;
+        }
+    </script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" th:href="@{/home}"><img id="imglogo" src="https://lh3.googleusercontent.com/a-/ACNPEu8X6lP2S43SkQUMJAIfYco8Bt83rt1LnztXxojAMMc=s75-c" alt=""></a>
+            <div class="d-lg-flex justify-content-end">  
+                <a class="nav-link" href="#">[[${#httpServletRequest.remoteUser}]]</a>
+                <a class="nav-link" th:href="@{/changepassword}">Đổi mật khẩu</a>
+                <a class="nav-link" href="javascript: logoutform.submit()">Đăng xuất</a>
+            </div>
+        </div>
+    </nav>
+    <form name="logoutform" th:action="@{/doLogout}" method "post" th:hidden="true">
+    	<input type="submit" value="Logout"/>
+    </form>
+    <div class="container body"  id="table">
+        <div class="row">
+            <div class="col-2"></div>
+            <div class="col-8">
+                <div class="card">
+                    <div class="card-header text-center">
+                        Bảng A
+                    </div>
+                    	<form method="post" th:action="@{/admin/saveScore}">
+		                    <ul class="list-group list-group-flush">
+		                        <li class="list-group-item">
+		                      	    <table style="width:100%;">
+		                                <tr th:each="item : ${listTD}">
+		                                    <td class="text-end" th:text="${item.tend1}"></td>
+		                                    <td class="text-end"><input class="score" type="number" name="bt1" style="width:40px;" th:value="${item.d1}"></td>
+		                                    <td><input class="score" type="number" name="bt2" style="width:40px;" th:value="${item.d2}"></td>
+		                                    <td th:text="${item.tend2}"></td>
+		                                    <td hidden><input type="text" name="id1" th:value="${item.maD1}"></td>
+		                                    <td hidden><input type="text" name="id2" th:value="${item.maD2}"></td>
+		                                    <td hidden><input type="text" name="maTD" th:value="${item.maTD}"></td>
+		                                </tr>
+		                            </table>
+		                        </li>
+		                        <li class="list-group-item">
+		                        	<div class="d-flex justify-content-center">
+		                    			<input type="submit" class="btn-success" id="save" value="Lưu">
+		                    		</div>
+		                    		<div class="d-flex justify-content-center">
+                            			<input type="button" class="btn-success" onclick="printKQ('table')" value="In kết quả" />
+                        			</div>
+		                        </li>
+		                    </ul>
+		                    <input type="text" name="maBD" th:value="${mabang}" hidden>
+		                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <input type="text" th:value="${role}" id="role" hidden>
+    
+</body>
+</html>

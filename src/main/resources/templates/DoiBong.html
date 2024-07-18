@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+    
+    <title>Quản lý đội bóng</title>
+    <style>
+        a{
+            text-decoration: none;
+        }
+        body{
+            background-image: url(https://wallpapercave.com/dwp1x/wp8255680.jpg);
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+    </style>
+    <script>
+        $(document).ready(function() {
+            $('.table').dataTable({
+                "language": {
+                    "sProcessing":   "Đang xử lý...",
+                    "sLengthMenu":   "<span style='margin-left:150px; font-weight: bold;'>Tìm kiếm đội bóng</span>",
+                    "sZeroRecords":  "Không tìm thấy đội bóng nào phù hợp",
+                    "sInfo":         "",
+                    "sInfoEmpty":    "",
+                    "sInfoFiltered": "",
+                    "sInfoPostFix":  "",
+                    "sSearch":       "",
+                    "sUrl":          "",
+                    "oPaginate": {
+                        "sFirst":    "Đầu",
+                        "sPrevious": "Trước",
+                        "sNext":     "Tiếp",
+                        "sLast":     "Cuối"
+                    }
+                },
+                "aLengthMenu": [7]
+            });
+            
+            $("#header").load("./header.html");
+        }); 
+        function editform(id){
+			let name = document.getElementById(id).getAttribute("data");
+			$("#edid").val(id)
+            $("#edname").val(name)
+		}
+		function checkEdit(){
+            if($("#edname").val() ==""){
+                $("#edMessage").html("Tên không được bỏ trống");
+                event.preventDefault();
+            }
+        }
+        function checkAdd(){
+            if($("#name").val() ==""){
+                $("#addMessage").html("Tên không được bỏ trống");
+                event.preventDefault();
+            }
+        }
+        function printt(name) {
+	        var printContents = document.getElementById(name).innerHTML;
+	        var originalContents = document.body.innerHTML;
+	   
+	        document.body.innerHTML = printContents;
+	   
+	        window.print();
+	   
+	        document.body.innerHTML = originalContents;
+   		}
+    </script>
+</head>
+<body>
+	<div id="header"></div>
+    <div class="container mt-5">
+		<div class="row">
+			<div class="col-4 ">
+                <div class="add border rounded p-3 bg-light">
+                    <h4 class="text-success">Thêm đội bóng</h4>
+				    <form id="submit-form" th:action="@{/admin/savedoibong}" th:object="${DoiBong}" method="post">
+				        <input type="hidden" name="action" value="insert" />
+				    <div class="form-group">
+				        <label for="name">Tên đội bóng</label>
+				        <input type="text" class="form-control" id="name" placeholder="Nhập tên đội bóng" th:field="*{name}">
+				    </div>
+				    <p id="addMessage" class="text-danger"></p>
+				     <div class="text-danger ml-3" th:text="${Message}"></div>
+				    <button type="submit" class="btn btn-success mt-2" onclick="checkAdd()">Thêm</button>
+				</form>
+                </div>
+				
+			</div>
+			
+			<div class="col-8 px-4" id="table">
+				<div class="border rounded p-3 bg-light">
+					<h4 class="text-success">Danh sách các đội bóng</h4>
+					<table class="table">
+					  <thead>
+					    <tr>
+					      <th scope="col">STT</th>
+					      <th scope="col">Tên đội bóng</th>
+					      <th scope="col">Thao tác</th>
+					    </tr>
+					  </thead>	  
+					  <tbody>
+                        <tr th:each="db,state : ${listDB}">
+                            <td th:text="${state.count}"></td>
+                            <td th:text="${db.name}"></td>
+                            <td>
+                                <a th:id="${db.id}" th:data="${db.name}" data-bs-toggle="modal" data-bs-target="#editform" onclick="editform(id)">Edit</a>
+                                &nbsp;&nbsp;&nbsp;
+                                <a th:href="@{'/admin/delete/' + ${db.id}}" th:onclick = "return confirm('Bạn có chắc muốn xóa ?')">Delete</a>
+                            </td>
+                        </tr>
+                  </tbody>
+					</table>
+					<input class="btn-success" type="button" onclick="printt('table')" value="In danh sách đội bóng" />
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="row mb-3 justify-content-center">
+        <div class="modal fade" id="editform" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="text-center text-secondary mt-5 mb-3">Sửa thông tin</h3>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form class=" w-100 mb-5 mx-auto px-3 pt-3 " th:action="@{/admin/savedoibong}" th:object="${DoiBong}" method="post">
+	                        <div class="form-group">
+	                           	<label for="edid">Mã đội bóng</label>
+	                            <input id="edid" type="text" class="form-control" name="edid" readonly th:field="*{id}">
+	                        </div>
+                            <div class="form-group">
+                                <label for="edname">Tên đội bóng</label>
+                                <input id="edname" type="text" class="form-control" placeholder="Nhập tên đội bóng" name="edname" th:field="*{name}">
+                            </div>
+                            <div class="form-group mt-3">
+                                <button class="btn btn-success px-5" onclick="checkEdit()">Lưu</button>
+                            </div>
+                            <p id="edMessage" class="text-danger"></p>
+                        </form>
+                    </div>    
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

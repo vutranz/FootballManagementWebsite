@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #imglogo{
+            width: 75%;
+            height: 75%;
+            margin-left: 3%;
+        }
+        nav{
+            background-color: white;
+            opacity: 0.5;
+        }
+        .nav-link{
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" th:href="@{/home}"><img id="imglogo" src="https://lh3.googleusercontent.com/a-/ACNPEu8X6lP2S43SkQUMJAIfYco8Bt83rt1LnztXxojAMMc=s75-c" alt=""></a>
+            <div class="d-lg-flex justify-content-end">  
+                <a class="nav-link" href="#">[[${#httpServletRequest.remoteUser}]]</a>
+                <a class="nav-link" th:href="@{/changepassword}">Đổi mật khẩu</a>
+                <a class="nav-link" href="javascript: logoutform.submit()">Đăng xuất</a>
+            </div>
+        </div>
+    </nav>
+    <form name="logoutform" th:action="@{/doLogout}" method "post" th:hidden="true">
+    	<input type="submit" value="Logout"/>
+    </form>
+</body>
+</html>
